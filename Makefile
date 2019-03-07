@@ -4,6 +4,8 @@ homework: homework.c
 serial: homework
 	mpirun -np 1 homework imagini.in
 distrib: homework
-	mpirun -np 4 homework imagini.in
+	mpirun -np 4 homework in/lenna_color.pnm lenna emboss
+	#mpirun -np 4 homework in/lenna_color.pnm lenna sharpen
+	#mpirun -np 4 homework in/lenna_bw.pgm lenna blur sharpen smooth emboss mean blur sharpen smooth emboss mean
 clean:
 	rm -f homework
