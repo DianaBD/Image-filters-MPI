@@ -1,0 +1,49 @@
+Brodoceanu Diana 336CA
+
+                  README - Tema3 - APD
+
+
+    Citirea si scrierea sunt facut mereu de procesul 0, indiferent de numarul total de procese.
+    In fuctie de numarul de procese cu care este rulat programul:
+
+    1 proces => procesul cu rank 0 proceseaza toata imaginea
+
+    2 procese => procesul cu rank 1 primeste de la 0 liniile din matricea imaginii
+                 si prelucreaza toata matricea imaginii, apoi o trimite inapoi la 0
+                 linie cu linie
+
+    3+ procese => 
+           Procesul cu rank 0 distribuie liniile matricei celorlalte procese
+                - procesul cu rank 1 primeste 
+                   -> liniile care ii revin de aplicat filtre pe ele
+                   -> linia imediat de dedesubtul ultimei de prelucrat
+                - procesul cu rank (nProcesses -1) , adica cu rank maxim primeste
+                   -> linia imediat de dasupra primei de prelucrat
+                   -> liniile care ii revin de aplicat filtre pe ele
+                - orice alt proces (procesele din mijloc) primesc
+                   -> linia imediat de dasupra primei de prelucrat
+                   -> liniile care ii revin de aplicat filtre pe ele
+                   -> linia imediat de dedesubtul ultimei de prelucrat
+
+           Dupa aplicarea unui filtru, fiecare proces "muncitor":
+              -trimite:
+                 -> prima linie prelucrata procesului vecin (rank - 1),
+                 adica vecinului de sus
+                 -> ultima linie prelucrata procesului vecin (rank + 1),
+                 adica vecinului de jos
+              -primeste:
+                 -> ultima linie prelucrata de vecinul de sus, de la (rank - 1)
+                 -> prima linie prelucrata de vecinul de jos, de la (rank + 1)
+
+           Exceptie fac procesul cu rank 1 si cu rank maxim, care trimit si primesc
+           doar de jos, respectiv de sus, deoarece bordurile imaginii raman 
+           neschimbate.
+
+           In functie de paritatea rank-ului, jumatate din procese mai intai trimit
+           si dupa aceea primesc, si cealalta jumatate invers, pentru a evita intrarea
+           in deadlock
+
+           Dupa aplicarea tuturor filtrelor, fiecare proces trimite procesului
+           cu rank 0 liniile pe care le-a avut de prelucrat.
+
+                      
